@@ -2,6 +2,7 @@ import { Link, Redirect } from 'react-router-dom';
 import logo from './imgs/logo.svg';
 import { Register } from './Register';
 import { SyntheticEvent, useState } from 'react';
+import { Footer } from '../components/Footer';
 
 export const Login = () => {
   const [email,setEmail] = useState('');

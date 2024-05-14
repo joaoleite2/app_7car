@@ -5,9 +5,7 @@ export const Nav = ()=>{
     <>
       <nav className="bg-red-800 border-gray-200">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src={logo} className="h-10" alt="7Car Logo" />
-        </a>
+          <img src={logo} className="h-10" alt="7Car Logo" />
         <div className="flex md:order-2">
           <div className="relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

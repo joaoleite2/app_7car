@@ -2,6 +2,7 @@ import { SyntheticEvent, useState } from 'react';
 import logo from './imgs/logo.svg';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import { Footer } from '../components/Footer';
 
 export const Register = () => {
   const [email,setEmail] = useState('');

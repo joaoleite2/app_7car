@@ -3,6 +3,7 @@ import { Login } from './pages/Login';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Register } from './pages/Register';
 import { Home } from './pages/Home';
+import { Product } from './pages/Product';
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
           <Route path='/' exact component={()=><Home pEmail={email} / >}></Route>
           <Route path='/register' component={Register}></Route>
           <Route path='/login' component={Login}></Route>
+          <Route path='/product' component={()=><Product email={email} />} ></Route>
       </BrowserRouter>
     </>
   );
