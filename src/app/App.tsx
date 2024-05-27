@@ -4,6 +4,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { Product } from './pages/Product';
+import { Contact } from './pages/Contact';
 
 function App() {
   
@@ -29,6 +30,7 @@ function App() {
           <Route path='/register' component={Register}></Route>
           <Route path='/login' component={Login}></Route>
           <Route path='/product' component={()=><Product email={email} />} ></Route>
+          <Route path='/contact' component={Contact}></Route>
       </BrowserRouter>
     </>
   );

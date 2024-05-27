@@ -22,7 +22,7 @@ export const HamburgerMenu = () => {
     },
     {
       "item":"Central de ajuda",
-      "linkTo": "/ajuda",
+      "linkTo": "/contact",
       "ico": <IoMdHelp />
     },
     {
