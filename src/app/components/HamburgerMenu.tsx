@@ -3,6 +3,8 @@ import { FaTimes, FaBars, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoMdHelp, IoMdSettings  } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
+import { MdAdminPanelSettings } from "react-icons/md";
+
 
 export const HamburgerMenu = () => {
   const [open, setOpen] = useState(false);
@@ -29,6 +31,11 @@ export const HamburgerMenu = () => {
       "item":"Configurações",
       "linkTo": "/configuracoes",
       "ico":<IoMdSettings />
+    },
+    {
+      "item":"Admin",
+      "linkTo":"/admin",
+      "ico":<MdAdminPanelSettings />
     }
   ];
 

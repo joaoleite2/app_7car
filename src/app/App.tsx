@@ -5,24 +5,25 @@ import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { Product } from './pages/Product';
 import { Contact } from './pages/Contact';
+import { Admin } from './pages/amin/Admin';
 
 function App() {
   
   const [email,setEmail] = useState('');
-  useEffect(()=>{
-    (
-      async ()=>{
-        const response = await fetch('http://localhost:8080/auth/user',{
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        const content = await response.json();
-        setEmail(content.email_Usu);
-      }
-    )();
-  })
+  // useEffect(()=>{
+  //   (
+  //     async ()=>{
+  //       const response = await fetch('http://localhost:8080/auth/user',{
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         credentials: 'include',
+  //       });
+  //       const content = await response.json();
+  //       setEmail(content.email_Usu);
+  //     }
+  //   )();
+  // })
   return (
     <>
       <BrowserRouter>
@@ -31,6 +32,7 @@ function App() {
           <Route path='/login' component={Login}></Route>
           <Route path='/product' component={()=><Product email={email} />} ></Route>
           <Route path='/contact' component={Contact}></Route>
+          <Route path='/admin' component={Admin}></Route>
       </BrowserRouter>
     </>
   );
