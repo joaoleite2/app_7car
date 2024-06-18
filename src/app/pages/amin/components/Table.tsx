@@ -2,7 +2,7 @@ import { MdModeEdit } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Modal from './Modal';
+import Modal from './ModalUpdate';
 
 interface User {
   id_Usu: number;

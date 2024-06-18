@@ -10,13 +10,13 @@ interface User {
   status_Usu: string | null | boolean;
 }
 
-interface ModalProps {
+interface ModalUpdateProps {
   user: User | null;
   onClose: () => void;
   onSave: (user: User) => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ user, onClose, onSave }) => {
+const ModalUpdate: React.FC<ModalUpdateProps> = ({ user, onClose, onSave }) => {
   const [formData, setFormData] = useState<User>(user || {} as User);
 
   useEffect(() => {
@@ -79,4 +79,4 @@ const Modal: React.FC<ModalProps> = ({ user, onClose, onSave }) => {
   );
 };
 
-export default Modal;
+export default ModalUpdate;
