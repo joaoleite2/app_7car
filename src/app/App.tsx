@@ -6,10 +6,12 @@ import { Home } from './pages/Home';
 import { Product } from './pages/Product';
 import { Contact } from './pages/Contact';
 import { Admin } from './pages/amin/Admin';
+import { CreateProduct } from './pages/amin/components/CreateProduct';
+import { EditProduct } from './pages/amin/components/EditProduct';
 
 function App() {
-  
-  const [email,setEmail] = useState('');
+  const [email, setEmail] = useState('');
+
   // useEffect(()=>{
   //   (
   //     async ()=>{
@@ -24,15 +26,18 @@ function App() {
   //     }
   //   )();
   // })
+
   return (
     <>
       <BrowserRouter>
-          <Route path='/' exact component={()=><Home pEmail={email} / >}></Route>
-          <Route path='/register' component={Register}></Route>
-          <Route path='/login' component={Login}></Route>
-          <Route path='/product' component={()=><Product email={email} />} ></Route>
-          <Route path='/contact' component={Contact}></Route>
-          <Route path='/admin' component={Admin}></Route>
+        <Route path='/' exact component={() => <Home pEmail={email} />} />
+        <Route path='/register' component={Register} />
+        <Route path='/login' component={Login} />
+        <Route path='/product/:id' component={(props: any) => <Product {...props} email={email} />} />
+        <Route path="/edit-product/:id" component={EditProduct} />
+        <Route path='/contact' component={Contact} />
+        <Route path='/admin' component={Admin} />
+        <Route path="/create-product" component={CreateProduct} />
       </BrowserRouter>
     </>
   );
