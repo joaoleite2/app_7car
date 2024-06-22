@@ -1,24 +1,47 @@
-// src/app/App.tsx
-
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Login } from './pages/Login';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { Product } from './pages/Product';
-import Cart from './components/Cart';
+import { Contact } from './pages/Contact';
+import { Admin } from './pages/amin/Admin';
+import { CreateProduct } from './pages/amin/components/CreateProduct';
+import { EditProduct } from './pages/amin/components/EditProduct';
 import { CartProvider } from './components/contexts/CartContext';
 
-const App: React.FC = () => {
+function App() {
+  const [email, setEmail] = useState('');
+
+  // useEffect(()=>{
+  //   (
+  //     async ()=>{
+  //       const response = await fetch('http://localhost:8080/auth/user',{
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         credentials: 'include',
+  //       });
+  //       const content = await response.json();
+  //       setEmail(content.email_Usu);
+  //     }
+  //   )();
+  // })
+
   return (
-    <CartProvider>
-      <Router>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/product/:id" component={Product} />
-          <Route path="/cart" component={Cart} />
-        </Switch>
-      </Router>
-    </CartProvider>
+    <>
+      <CartProvider>
+        <Route path='/' exact component={() => <Home pEmail={email} />} />
+        <Route path='/register' component={Register} />
+        <Route path='/login' component={Login} />
+        <Route path='/product/:id' component={(props: any) => <Product {...props} email={email} />} />
+        <Route path="/edit-product/:id" component={EditProduct} />
+        <Route path='/contact' component={Contact} />
+        <Route path='/admin' component={Admin} />
+        <Route path="/create-product" component={CreateProduct} />
+      </CartProvider>
+    </>
   );
-};
+}
 
 export default App;

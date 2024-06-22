@@ -1,7 +1,7 @@
 export const Footer = ()=>{
   return(
     <footer
-  className="flex flex-col items-center bg-red-600 text-center text-surface">
+  className="flex flex-col items-center bg-red-800 text-center text-surface">
   <div className="container pt-9">
     <div className="mb-6 flex justify-center space-x-2">
       <a

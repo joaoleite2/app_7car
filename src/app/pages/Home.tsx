@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Nav } from "../components/Nav";
-import { Link, useHistory } from "react-router-dom";
-import { Footer } from "../components/Footer";
-import { CiCirclePlus } from "react-icons/ci";
+import React, { useEffect, useState } from 'react';
+import { Nav } from '../components/Nav';
+import { Link, useHistory } from 'react-router-dom';
+import { Footer } from '../components/Footer';
+import { CiCirclePlus } from 'react-icons/ci';
+import { Slogan } from '../components/Slogan';
 
 interface Product {
   id: number;
@@ -15,10 +16,13 @@ interface Product {
 
 export const Home = (props: { pEmail: string }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
+  const [showFooter, setShowFooter] = useState(true); // Estado para controlar o footer
   const history = useHistory();
 
   useEffect(() => {
-    fetch("http://localhost:8080/product")
+    fetch('http://localhost:8080/product')
       .then((response) => response.json())
       .then((data) => {
         const adjustedProducts: Product[] = data
@@ -32,6 +36,7 @@ export const Home = (props: { pEmail: string }) => {
             stock: product.qtnEstoque_Prod,
           }));
         setProducts(adjustedProducts);
+        setFilteredProducts(adjustedProducts); // Inicializa com todos os produtos
       })
       .catch((error) => {
         console.error('Erro ao buscar produtos:', error);
@@ -39,12 +44,23 @@ export const Home = (props: { pEmail: string }) => {
   }, []);
 
   const handleCreateProduct = () => {
-    history.push("/create-product");
+    history.push('/create-product');
+  };
+
+  const handleSearch = (query: string) => {
+    const normalizedQuery = query.toLowerCase();
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(normalizedQuery)
+    );
+    setFilteredProducts(filtered);
+    setShowNotFoundMessage(filtered.length === 0); // Mostra a mensagem se nenhum produto for encontrado
+    setShowFooter(filtered.length > 0); // Mostra o footer se houver produtos filtrados
   };
 
   return (
     <>
-      <Nav />
+      <Nav onSearch={handleSearch} />
+      <Slogan />
       <div className="bg-[#F5F5F5]">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h1 className="font-bold text-2xl">
@@ -54,8 +70,11 @@ export const Home = (props: { pEmail: string }) => {
               </button>
             )}
           </h1>
+          {showNotFoundMessage && (
+            <p className="mt-4 text-red-500 text-3xl font-semibold">Produto não encontrado.</p>
+          )}
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <Link to={`/product/${product.id}`} key={product.id}>
                 <div className="group relative shadow-md">
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
@@ -71,7 +90,9 @@ export const Home = (props: { pEmail: string }) => {
                         {product.name}
                       </h3>
                     </div>
-                    <p className="text-sm font-medium text-gray-900">{product.price}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {product.price}
+                    </p>
                   </div>
                 </div>
               </Link>
@@ -79,7 +100,7 @@ export const Home = (props: { pEmail: string }) => {
           </div>
         </div>
       </div>
-      <Footer />
+      {showFooter && <Footer />}
     </>
   );
 };
