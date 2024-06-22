@@ -1,15 +1,18 @@
+// src/pages/Product.tsx
+
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { Footer } from "../components/Footer";
 import { Nav } from "../components/Nav";
+import { useCart } from "../components/contexts/CartContext";
 
 interface Product {
   id: number;
   name: string;
   imageSrc: string;
   imageAlt: string;
-  price: string;
+  price: number; // Mudei o tipo para number para facilitar o cálculo
   brand: string;
   model: string;
   description: string;
@@ -20,6 +23,7 @@ export const Product = (props: { email: string }) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
+  const { addToCart } = useCart(); // Obtendo a função addToCart do contexto do carrinho
 
   useEffect(() => {
     fetch(`http://localhost:8080/product/${id}`)
@@ -30,7 +34,7 @@ export const Product = (props: { email: string }) => {
           name: data.nome_Prod,
           imageSrc: data.imagem_Prod || 'url_da_sua_imagem_padrao_se_nao_houver',
           imageAlt: data.nome_Prod,
-          price: `R$${parseFloat(data.preco_Prod).toFixed(2)}`,
+          price: parseFloat(data.preco_Prod),
           brand: data.marca,
           model: data.modelo,
           description: data.desc_Prod,
@@ -46,6 +50,14 @@ export const Product = (props: { email: string }) => {
 
   const handleEditProduct = () => {
     history.push(`/edit-product/${id}`);
+  };
+
+
+  const handleAddToCart = () => {
+    if (product) {
+      alert('Produto adicionado ao carrinho');
+      addToCart({ ...product, quantity: 1 }); 
+    }
   };
 
   if (loading) {
@@ -79,9 +91,9 @@ export const Product = (props: { email: string }) => {
               </div>
 
               <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                <h1 className="text-3xl font-bold">{product.price}</h1>
-                {props.email ? (
-                  <button type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-red-600 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-red-500">
+                <h1 className="text-3xl font-bold">R${product.price.toFixed(2)}</h1>
+                {!props.email ? (
+                  <button onClick={handleAddToCart} type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-red-600 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>

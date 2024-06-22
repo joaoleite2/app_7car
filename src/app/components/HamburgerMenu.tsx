@@ -14,7 +14,7 @@ export const HamburgerMenu = () => {
   const menuItems = [
     {
       "item":"Carrinho",
-      "linkTo": "/carrinho",
+      "linkTo": "/cart",
       "ico": <FiShoppingCart />
     },
     {
