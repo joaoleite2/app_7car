@@ -9,6 +9,7 @@ import { Admin } from './pages/amin/Admin';
 import { CreateProduct } from './pages/amin/components/CreateProduct';
 import { EditProduct } from './pages/amin/components/EditProduct';
 import { CartProvider } from './components/contexts/CartContext';
+import Cart from './components/Cart';
 
 function App() {
   const [email, setEmail] = useState('');
@@ -39,6 +40,7 @@ function App() {
         <Route path='/contact' component={Contact} />
         <Route path='/admin' component={Admin} />
         <Route path="/create-product" component={CreateProduct} />
+        <Route path="/cart" component={Cart} />
       </CartProvider>
     </>
   );
