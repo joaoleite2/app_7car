@@ -5,9 +5,9 @@ import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { Product } from './pages/Product';
 import { Contact } from './pages/Contact';
-import { Admin } from './pages/amin/Admin';
-import { CreateProduct } from './pages/amin/components/CreateProduct';
-import { EditProduct } from './pages/amin/components/EditProduct';
+import { Admin } from './pages/admin/Admin';
+import { CreateProduct } from './pages/admin/components/CreateProduct';
+import { EditProduct } from './pages/admin/components/EditProduct';
 import { CartProvider } from './components/contexts/CartContext';
 import Cart from './components/Cart';
 

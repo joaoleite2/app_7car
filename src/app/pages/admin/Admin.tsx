@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CiCirclePlus } from "react-icons/ci";
 import { Table } from "./components/Table";
 import CreateUserModal from './components/ModalCreate';
+import { Nav } from '../../components/Nav';
 
 export const Admin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,9 +22,10 @@ export const Admin = () => {
 
   return (
     <>
-      <main className="flex flex-col px-20 justify-center bg-red-100 min-h-screen h-auto gap-4">
+    <Nav />
+      <main className="flex flex-col px-20 justify-center bg-[#f5f5f5] min-h-screen h-auto gap-4">
         <h1 className="text-3xl font-bold">Funcionários</h1>
-        <section className="h-auto bg-white w-full rounded-3xl flex items-start gap-10 p-8 flex-col">
+        <section className="h-auto bg-white shadow-xl w-full rounded-3xl flex items-start gap-10 p-8 flex-col">
           <div className="ml-0 flex justify-end w-full">
             <button 
               className="flex items-center gap-1 font-bold text-red-500" 
