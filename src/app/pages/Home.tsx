@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Nav } from '../components/Nav';
 import { Link, useHistory } from 'react-router-dom';
-import { Footer } from '../components/Footer';
 import { CiCirclePlus } from 'react-icons/ci';
+import { Nav } from '../components/Nav';
+import { Footer } from '../components/Footer';
 import { Slogan } from '../components/Slogan';
+import { useAuth } from '../components/contexts/AuthContext';
 
 interface Product {
   id: number;
@@ -14,14 +15,15 @@ interface Product {
   stock: number;
 }
 
-export const Home = (props: { pEmail: string, isAdmin: boolean }) => {
+export const Home = () => {
+  const { isAdmin } = useAuth(); // Obtém o estado de isAdmin do contexto
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
   const [showFooter, setShowFooter] = useState(true); // Estado para controlar o footer
   const history = useHistory();
 
-  useEffect(() => {
+  const fetchProducts = () => {
     fetch('http://localhost:8080/product')
       .then((response) => response.json())
       .then((data) => {
@@ -41,14 +43,20 @@ export const Home = (props: { pEmail: string, isAdmin: boolean }) => {
       .catch((error) => {
         console.error('Erro ao buscar produtos:', error);
       });
+  };
+
+  useEffect(() => {
+    fetchProducts(); // Carrega os produtos na montagem inicial
+
+    const interval = setInterval(() => {
+      fetchProducts(); // Atualiza os produtos a cada intervalo de tempo (por exemplo, a cada 5 minutos)
+    }, 300000); // 300000 milissegundos = 5 minutos
+
+    return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
   }, []);
 
   const handleCreateProduct = () => {
-    if (props.isAdmin) {
-      history.push('/create-product');
-    } else {
-      alert('Você não tem permissão para criar produtos.');
-    }
+    history.push('/create-product');
   };
 
   const handleSearch = (query: string) => {
@@ -68,12 +76,10 @@ export const Home = (props: { pEmail: string, isAdmin: boolean }) => {
       <div className="bg-[#F5F5F5]">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h1 className="font-bold text-2xl">
-            {!props.isAdmin ? null : (
-              props.isAdmin && (
-                <button className="flex items-center gap-1 font-bold text-red-500" onClick={handleCreateProduct}>
-                  Criar <CiCirclePlus className="text-2xl" />
-                </button>
-              )
+            {isAdmin && (
+              <button className="flex items-center gap-1 font-bold text-red-500" onClick={handleCreateProduct}>
+                Criar <CiCirclePlus className="text-2xl" />
+              </button>
             )}
           </h1>
           {showNotFoundMessage && (
@@ -110,3 +116,5 @@ export const Home = (props: { pEmail: string, isAdmin: boolean }) => {
     </>
   );
 };
+
+export default Home;

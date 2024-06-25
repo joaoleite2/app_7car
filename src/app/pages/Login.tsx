@@ -1,13 +1,15 @@
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from './imgs/logo.svg';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useState, useEffect } from 'react';
 import { Footer } from '../components/Footer';
+import { useAuth } from '../components/contexts/AuthContext';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState('');
+  const { login } = useAuth();
 
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -26,26 +28,30 @@ export const Login = () => {
     });
 
     if (response.ok) {
+      const data = await response.json();
+      login(data.email_Usu, data.status_Usu);
       setRedirect(true);
     } else {
       const data = await response.json();
-      setError('Credenciais inválidas' || 'Erro ao fazer login');
+      setError(data.message || 'Erro ao fazer login');
     }
-  }
+  };
+
+  useEffect(() => {
+    if (redirect) {
+      window.location.href = '/';
+    }
+  }, [redirect]);
 
   if (redirect) {
-    return <Redirect to='/' />;
+    return <p>Redirecionando...</p>;
   }
 
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src={logo}
-            alt="7car logo"
-          />
+          <img className="mx-auto h-10 w-auto" src={logo} alt="7car logo" />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Entre na sua conta
           </h2>

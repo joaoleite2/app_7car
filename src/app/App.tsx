@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Login } from './pages/Login';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
-import { Register } from './pages/Register';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
+import { Register } from './pages/Register';
+import { Login } from './pages/Login';
 import { Product } from './pages/Product';
 import { Contact } from './pages/Contact';
 import { Admin } from './pages/admin/Admin';
@@ -10,36 +10,29 @@ import { CreateProduct } from './pages/admin/components/CreateProduct';
 import { EditProduct } from './pages/admin/components/EditProduct';
 import { CartProvider } from './components/contexts/CartContext';
 import Cart from './components/Cart';
+import PrivateRoute from './components/PrivateRoute';
+import { useAuth } from './components/contexts/AuthContext';
 
 function App() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState(false);
+  const [key, setKey] = useState(0); // Adiciona uma chave de estado
+  const { isAdmin } = useAuth(); // Obtém o estado de autenticação do contexto
 
   useEffect(() => {
-    (async () => {
-      const response = await fetch('http://localhost:8080/auth/user', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-      const content = await response.json();
-      setEmail(content.email_Usu);
-      setStatus(content.status_Usu);
-    })();
-  }, []);
+    // Atualiza a chave sempre que o estado de isAdmin mudar
+    setKey((prevKey) => prevKey + 1);
+  }, [isAdmin]);
 
   return (
     <BrowserRouter>
       <CartProvider>
-        <Route path='/' exact component={() => <Home pEmail={email} isAdmin={status} />} />
+        <Route key={key} path='/' exact component={() => <Home key={key} />} />
         <Route path='/register' component={Register} />
         <Route path='/login' component={Login} />
-        <Route path='/product/:id' component={(props: any) => <Product {...props} email={email} />} />
-        <Route path="/edit-product/:id" component={(props: any) => <EditProduct {...props} isAdmin={status} />} />
+        <Route path='/product/:id' component={Product} />
+        <PrivateRoute path='/edit-product/:id' component={EditProduct} isAdmin={isAdmin} />
         <Route path='/contact' component={Contact} />
-        <Route path='/admin' component={(props: any) => <Admin {...props} isAdmin={status} />} />
-        <Route path="/create-product" component={(props: any) => <CreateProduct {...props} isAdmin={status} />} />
+        <PrivateRoute path='/admin' component={Admin} isAdmin={isAdmin} />
+        <PrivateRoute path="/create-product" component={CreateProduct} isAdmin={isAdmin} />
         <Route path="/cart" component={Cart} />
       </CartProvider>
     </BrowserRouter>

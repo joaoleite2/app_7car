@@ -12,21 +12,26 @@ interface Product {
   name: string;
   imageSrc: string;
   imageAlt: string;
-  price: number; // Mudei o tipo para number para facilitar o cálculo
+  price: number;
   brand: string;
   model: string;
   description: string;
 }
 
-export const Product = (props: { email: string }) => {
+interface ProductProps {
+  email: string;
+  isAdmin: boolean;  // Adicione esta linha
+}
+
+export const Product: React.FC<ProductProps> = ({ email, isAdmin }) => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
-  const { addToCart } = useCart(); // Obtendo a função addToCart do contexto do carrinho
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    fetch(`http://localhost:8080/product/${id}`)
+    fetch(`http://localhost:8080/product/${id}`)  
       .then((response) => response.json())
       .then((data) => {
         const adjustedProduct: Product = {
@@ -52,11 +57,10 @@ export const Product = (props: { email: string }) => {
     history.push(`/edit-product/${id}`);
   };
 
-
   const handleAddToCart = () => {
     if (product) {
       alert('Produto adicionado ao carrinho');
-      addToCart({ ...product, quantity: 1 }); 
+      addToCart({ ...product, quantity: 1 });
     }
   };
 
@@ -73,9 +77,11 @@ export const Product = (props: { email: string }) => {
       <Nav />
       <section className="py-12 sm:py-16">
         <div className="container mx-auto px-4">
-          <button onClick={handleEditProduct} className="text-3xl text-red-700">
-            <FaEdit />
-          </button>
+          {isAdmin && (  // Condicional para mostrar o botão de edição somente para admins
+            <button onClick={handleEditProduct} className="text-3xl text-red-700">
+              <FaEdit />
+            </button>
+          )}
           <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
             <div className="lg:col-span-3 lg:row-end-1">
               <div className="lg:flex lg:items-start max-w-xl">
@@ -92,23 +98,12 @@ export const Product = (props: { email: string }) => {
 
               <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                 <h1 className="text-3xl font-bold">R${product.price.toFixed(2)}</h1>
-                {props.email ? (
-                  <button onClick={handleAddToCart} type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-red-600 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-red-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    + Adicione ao carrinho
-                  </button>
-                ) : (
-                  <Link to='/login'>
-                    <button type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-red-600 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-red-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                      </svg>
-                      + Adicione ao carrinho
-                    </button>
-                  </Link>
-                )}
+                <button onClick={handleAddToCart} type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-red-600 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-red-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  + Adicione ao carrinho
+                </button>
               </div>
               <div className="lg:col-span-3">
                 <div className="mt-8 flow-root sm:mt-12">

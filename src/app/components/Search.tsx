@@ -15,7 +15,7 @@ export const Search: React.FC<SearchProps> = ({ onSearch }) => {
 
   return (
     <form
-      className="bg-white rounded-lg sm:flex box-border sm:w-auto w-1/3"
+      className="bg-white rounded-lg sm:flex box-border sm:w-auto hidden sm:block w-1/3"
       onSubmit={submit}
     >
       <input

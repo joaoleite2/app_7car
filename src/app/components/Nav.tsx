@@ -11,12 +11,12 @@ interface NavProps {
 export const Nav: React.FC<NavProps> = ({ onSearch }) => {
   return (
     <>
-      <nav className="bg-red-800 border-gray-200">
+      <nav className="bg-red-800 border-gray-200 items-center">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <Link to="/">
             <img src={logo} className="sm:h-10 h-8" alt="7Car Logo" />
           </Link>
-          <div className="flex space-x-10">
+          <div className="space-x-10 items-center sm:flex">
             {onSearch && <Search onSearch={onSearch} />} {/* Renderizar Search apenas se onSearch estiver definido */}
             <HamburgerMenu />
           </div>
