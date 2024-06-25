@@ -1,16 +1,19 @@
 import { Link, Redirect } from 'react-router-dom';
 import logo from './imgs/logo.svg';
-import { Register } from './Register';
 import { SyntheticEvent, useState } from 'react';
 import { Footer } from '../components/Footer';
 
 export const Login = () => {
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState('');
-  const [redirect,setRedirect] = useState(false);
-  const submit = async (e:SyntheticEvent)=>{
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [redirect, setRedirect] = useState(false);
+  const [error, setError] = useState('');
+
+  const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await fetch('http://localhost:8080/auth/login',{
+    setError('');
+
+    const response = await fetch('http://localhost:8080/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,13 +23,20 @@ export const Login = () => {
         password,
       }),
       credentials: 'include',
-    })
-    setRedirect(true);
+    });
+
+    if (response.ok) {
+      setRedirect(true);
+    } else {
+      const data = await response.json();
+      setError('Credenciais inválidas' || 'Erro ao fazer login');
+    }
   }
-  if(redirect){
-    return <Redirect to='/' />
+
+  if (redirect) {
+    return <Redirect to='/' />;
   }
-  
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -43,6 +53,11 @@ export const Login = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={submit}>
+            {error && (
+              <div className="text-red-600 text-sm text-center">
+                {error}
+              </div>
+            )}
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email
@@ -55,7 +70,7 @@ export const Login = () => {
                   autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  onChange={e=> setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -79,7 +94,7 @@ export const Login = () => {
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  onChange={e=> setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                 />
               </div>
             </div>
@@ -98,12 +113,17 @@ export const Login = () => {
             Não tem uma conta?{' '}
             <Link to='/register'>
               <a className="font-semibold leading-6 text-red-600 hover:text-red-500">
-                Cadastre-se
+                Cadastre-se<br />
+              </a>
+            </Link>
+            <Link to='/'>
+              <a className="font-semibold leading-6 text-red-600 hover:text-red-500">
+                Navegar sem conta
               </a>
             </Link>
           </p>
         </div>
       </div>
     </>
-  )
-}
+  );
+};

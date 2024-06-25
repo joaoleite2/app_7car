@@ -5,25 +5,36 @@ import { Redirect } from 'react-router-dom';
 import { Footer } from '../components/Footer';
 
 export const Register = () => {
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState('');
-  const [confirm,setConfirm] = useState('');
-  const [redirect,setRedirect] = useState(false);
-  const submit = async (e:SyntheticEvent<HTMLFormElement>)=>{
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState('');
+  const [redirect, setRedirect] = useState(false);
+
+  const submit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await axios.post('http://localhost:8080/auth/signup',
-      {
+    setError('');
+
+    if (password !== confirm) {
+      setError('As senhas não coincidem');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:8080/auth/register', {
         email,
         password,
-        confirm
-      }
-    );
-    setRedirect(true);
+      });
+      setRedirect(true);
+    } catch (error) {
+      setError('Erro ao registrar. Por favor, tente novamente.');
+    }
+  };
+
+  if (redirect) {
+    return <Redirect to='/login' />;
   }
-  if(redirect){
-    return <Redirect to='/login' />
-  }
-  
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -40,6 +51,11 @@ export const Register = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={submit}>
+            {error && (
+              <div className="text-red-600 text-sm text-center">
+                {error}
+              </div>
+            )}
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email
@@ -77,7 +93,7 @@ export const Register = () => {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="confirm" className="block text-sm font-medium leading-6 text-gray-900">
                   Confirme a senha
                 </label>
               </div>
@@ -88,7 +104,7 @@ export const Register = () => {
                   type="password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  onChange={e=>setConfirm(e.target.value)}
+                  onChange={e => setConfirm(e.target.value)}
                 />
               </div>
             </div>
@@ -105,5 +121,5 @@ export const Register = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};

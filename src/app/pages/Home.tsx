@@ -14,7 +14,7 @@ interface Product {
   stock: number;
 }
 
-export const Home = (props: { pEmail: string }) => {
+export const Home = (props: { pEmail: string, isAdmin: boolean }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -44,7 +44,11 @@ export const Home = (props: { pEmail: string }) => {
   }, []);
 
   const handleCreateProduct = () => {
-    history.push('/create-product');
+    if (props.isAdmin) {
+      history.push('/create-product');
+    } else {
+      alert('Você não tem permissão para criar produtos.');
+    }
   };
 
   const handleSearch = (query: string) => {
@@ -64,10 +68,12 @@ export const Home = (props: { pEmail: string }) => {
       <div className="bg-[#F5F5F5]">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h1 className="font-bold text-2xl">
-            {props.pEmail ? `Olá ${props.pEmail}` : (
-              <button className="flex items-center gap-1 font-bold text-red-500" onClick={handleCreateProduct}>
-                Criar <CiCirclePlus className="text-2xl" />
-              </button>
+            {!props.isAdmin ? null : (
+              props.isAdmin && (
+                <button className="flex items-center gap-1 font-bold text-red-500" onClick={handleCreateProduct}>
+                  Criar <CiCirclePlus className="text-2xl" />
+                </button>
+              )
             )}
           </h1>
           {showNotFoundMessage && (
